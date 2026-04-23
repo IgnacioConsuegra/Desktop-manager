@@ -25,7 +25,7 @@ const TopBar = ({ onAddClick }) => {
 
   return (
     <div className="h-8 w-full bg-black/90 flex items-center justify-between px-5 text-[13px] font-semibold text-gray-200 select-none z-40 shadow-md border-b border-white/5">
-      <div className="hover:text-white cursor-default">Actividades</div>
+      <div className="hover:text-white cursor-default"></div>
       <div className="absolute left-1/2 -translate-x-1/2 hover:text-white cursor-default tracking-wide font-bold">
         {formatTime(time)}
       </div>
@@ -34,7 +34,7 @@ const TopBar = ({ onAddClick }) => {
           onClick={onAddClick}
           className="bg-white/10 hover:bg-white/20 text-white px-3 py-1 rounded-md transition-colors border border-white/10 flex items-center gap-1 text-xs"
         >
-          <Plus size={14} /> Agregar
+          <Plus size={14} /> Add
         </button>
       </div>
     </div>

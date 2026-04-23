@@ -47,45 +47,53 @@ const ListModal = ({ isOpen, onClose, onSave, allItems, initialData }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-      <div className="bg-[#121212] w-full max-w-3xl rounded-xl border border-white/10 shadow-2xl flex flex-col max-h-[90vh] overflow-hidden">
+    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-md">
+      <div className="bg-gradient-to-br from-[#2b0a1d]/95 to-[#1e0814]/95 w-full max-w-3xl rounded-3xl border border-white/10 shadow-2xl flex flex-col max-h-[90vh] overflow-hidden">
         <div className="flex justify-between items-center p-6 border-b border-white/5">
-          <h2 className="text-xl font-bold text-white">
-            {initialData ? "Editar lista" : "Nueva lista"}
+          <h2 className="text-xl font-black text-white uppercase tracking-wider">
+            {initialData ? "Edit List" : "New List"}
           </h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-white">
+          <button
+            onClick={onClose}
+            className="text-white/50 hover:text-white transition-colors"
+          >
             <X size={24} />
           </button>
         </div>
-        <div className="p-6 overflow-y-auto flex-1 flex flex-col gap-6">
-          <div className="flex gap-6">
-            <div className="flex-1 flex flex-col gap-4">
+        <div className="p-8 overflow-y-auto flex-1 flex flex-col gap-8 custom-scrollbar">
+          <div className="flex flex-col md:flex-row gap-8">
+            <div className="flex-1 flex flex-col gap-5">
               <input
                 type="text"
                 value={name}
                 onChange={e => setName(e.target.value)}
-                placeholder="Nombre de la lista"
-                className="bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white outline-none focus:border-orange-500"
+                placeholder="List Name"
+                className="w-full bg-black/40 text-white rounded-xl px-5 py-4 border border-white/10 focus:outline-none focus:border-orange-500/50 focus:bg-black/60 shadow-inner text-sm transition-all"
               />
               <textarea
                 value={description}
                 onChange={e => setDescription(e.target.value)}
-                placeholder="Descripción..."
-                className="bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white outline-none h-20 resize-none"
+                placeholder="Description..."
+                className="w-full bg-black/40 text-white rounded-xl px-5 py-4 border border-white/10 focus:outline-none focus:border-orange-500/50 focus:bg-black/60 shadow-inner text-sm transition-all h-28 resize-none"
               />
             </div>
-            <div className="w-32 flex flex-col items-center gap-2">
+            <div className="w-full md:w-40 flex flex-col items-center gap-3">
               <div
                 onClick={() => fileInputRef.current.click()}
-                className="w-32 h-32 bg-white/5 border border-dashed border-white/20 rounded-xl flex items-center justify-center cursor-pointer overflow-hidden relative group"
+                className="w-40 h-40 bg-black/40 border border-dashed border-white/20 rounded-2xl flex flex-col items-center justify-center cursor-pointer overflow-hidden relative group hover:border-orange-500/50 transition-colors shadow-inner"
               >
                 {customImage ? (
                   <img
                     src={customImage}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 ) : (
-                  <Plus className="opacity-30 group-hover:opacity-100" />
+                  <div className="flex flex-col items-center gap-2 opacity-30 group-hover:opacity-100 transition-opacity">
+                    <Plus size={32} className="text-white" />
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-white">
+                      Cover
+                    </span>
+                  </div>
                 )}
               </div>
               <input
@@ -98,17 +106,34 @@ const ListModal = ({ isOpen, onClose, onSave, allItems, initialData }) => {
                   reader.readAsDataURL(e.target.files[0]);
                 }}
               />
+              {customImage && (
+                <button
+                  onClick={e => {
+                    e.stopPropagation();
+                    setCustomImage(null);
+                  }}
+                  className="text-[10px] text-red-500 hover:text-red-400 font-bold uppercase tracking-widest transition-colors mt-1"
+                >
+                  Remove Cover
+                </button>
+              )}
             </div>
           </div>
           <div className="flex flex-col gap-4">
-            <input
-              type="text"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder="Buscar aplicaciones para añadir..."
-              className="bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-sm text-white outline-none"
-            />
-            <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto pr-2">
+            <div className="relative flex items-center group">
+              <Search
+                className="absolute left-5 text-white/30 group-focus-within:text-orange-500 transition-colors"
+                size={18}
+              />
+              <input
+                type="text"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Search applications to add..."
+                className="w-full bg-black/40 text-white rounded-full pl-12 pr-6 py-3.5 border border-white/10 focus:outline-none focus:border-orange-500/50 focus:bg-black/60 shadow-inner text-sm transition-all"
+              />
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-56 overflow-y-auto pr-2 custom-scrollbar">
               {allItems
                 .filter(it =>
                   it.name.toLowerCase().includes(search.toLowerCase()),
@@ -117,13 +142,21 @@ const ListModal = ({ isOpen, onClose, onSave, allItems, initialData }) => {
                   <div
                     key={item.id}
                     onClick={() => toggleItem(item.id)}
-                    className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-colors ${selectedIds.includes(item.id) ? "bg-orange-600/20 border border-orange-500/50" : "bg-white/5 border border-transparent"}`}
+                    className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all border ${
+                      selectedIds.includes(item.id)
+                        ? "bg-orange-600/20 border-orange-500/50 shadow-[0_0_15px_rgba(233,84,32,0.15)]"
+                        : "bg-white/5 border-transparent hover:bg-white/10"
+                    }`}
                   >
-                    <img
-                      src={item.iconData}
-                      className="w-6 h-6 object-contain"
-                    />
-                    <span className="text-xs truncate">{item.name}</span>
+                    <div className="w-8 h-8 bg-black/20 rounded-lg p-1.5 flex-shrink-0">
+                      <img
+                        src={item.iconData}
+                        className="w-full h-full object-contain filter drop-shadow-md"
+                      />
+                    </div>
+                    <span className="text-xs font-medium truncate text-gray-200">
+                      {item.name}
+                    </span>
                   </div>
                 ))}
             </div>
@@ -132,9 +165,10 @@ const ListModal = ({ isOpen, onClose, onSave, allItems, initialData }) => {
         <div className="p-6 border-t border-white/5 flex justify-end">
           <button
             onClick={handleSave}
-            className="bg-white text-black px-8 py-2 rounded-full font-bold hover:bg-gray-200 transition-colors"
+            disabled={!name.trim()}
+            className="bg-orange-600 hover:bg-orange-500 disabled:bg-gray-700 disabled:text-gray-500 text-white px-10 py-3.5 rounded-full font-bold transition-all shadow-lg hover:shadow-orange-500/25 active:scale-95 border border-white/10"
           >
-            Guardar
+            Save
           </button>
         </div>
       </div>

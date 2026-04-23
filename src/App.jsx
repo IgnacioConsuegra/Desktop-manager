@@ -7,7 +7,7 @@ import AppListIcon from "./components/AppListIcon";
 import ListModal from "./components/ListModal";
 import ListView from "./components/ListView";
 import TopBar from "./components/TopBar";
-
+import AppNameModal from "./components/AppNameModal";
 const App = () => {
   const [items, setItems] = useState([]);
   const [appLists, setAppLists] = useState([]);
@@ -17,7 +17,12 @@ const App = () => {
   const [selectedList, setSelectedList] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingListData, setEditingListData] = useState(null);
-
+  const [nameModal, setNameModal] = useState({
+    isOpen: false,
+    path: "",
+    icon: "",
+    defaultName: "",
+  });
   useEffect(() => {
     const load = async () => {
       if (window.electronAPI) {
@@ -34,36 +39,37 @@ const App = () => {
       window.electronAPI.saveData({ items: newItems, appLists: newLists });
   };
 
-  const handleAddApp = async () => {
+  const handleAddAction = async () => {
     if (!window.electronAPI) return;
+
     const path = await window.electronAPI.selectFile();
     if (!path) return;
+
     const res = await window.electronAPI.processFilePath(path);
     if (res.success) {
-      const { value: name } = await Swal.fire({
-        title: "Nombre",
-        input: "text",
-        inputValue: res.name,
-        background: "#2b0a1d",
-        color: "#fff",
-        confirmButtonColor: "#e95420",
+      setNameModal({
+        isOpen: true,
+        path: path,
+        icon: res.icon,
+        defaultName: res.name,
       });
-      if (!name) return;
-      const newList = [
-        ...items,
-        {
-          id: Date.now().toString(),
-          name,
-          path,
-          iconData: res.icon,
-          isFavorite: false,
-        },
-      ];
-      setItems(newList);
-      save(newList, appLists);
     }
   };
-
+  const handleConfirmNewApp = finalName => {
+    const newList = [
+      ...items,
+      {
+        id: Date.now().toString(),
+        name: finalName,
+        path: nameModal.path,
+        iconData: nameModal.icon,
+        isFavorite: false,
+      },
+    ];
+    setItems(newList);
+    save(newList, appLists);
+    setNameModal({ ...nameModal, isOpen: false });
+  };
   const onExecute = path => {
     if (window.electronAPI) window.electronAPI.openFile(path);
   };
@@ -81,9 +87,8 @@ const App = () => {
     }
   }, [selectedList]);
   return (
-    <div className="h-screen w-screen flex flex-col bg-gradient-to-br from-[#4c1933] via-[#2b0a1d] to-[#1e0814] text-white overflow-hidden select-none font-sans">
-      <TopBar onAddClick={handleAddApp} />
-
+    <div className="h-screen w-full flex flex-col bg-gradient-to-br from-[#4c1933] via-[#2b0a1d] to-[#1e0814] text-white overflow-hidden select-none font-sans">
+      <TopBar onAddClick={handleAddAction} />
       {!selectedList ? (
         <>
           <div className="flex-1 overflow-y-auto p-10 flex flex-col items-center">
@@ -93,7 +98,7 @@ const App = () => {
                   <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-white transition-colors" />
                   <input
                     type="text"
-                    placeholder="Escriba para buscar..."
+                    placeholder="Write for search..."
                     className="w-full bg-black/40 rounded-full py-4 pl-16 pr-8 border border-white/10 outline-none focus:border-white/30 backdrop-blur-xl text-lg"
                     value={searchQuery}
                     onChange={e => setSearchQuery(e.target.value)}
@@ -103,7 +108,7 @@ const App = () => {
                 {items.some(i => i.isFavorite) && (
                   <section className="mb-12">
                     <h3 className="text-white/60 text-[11px] font-black uppercase tracking-[0.3em] mb-6 ml-4">
-                      Favoritos
+                      Favorites
                     </h3>
                     <div className="flex flex-wrap gap-6">
                       {items
@@ -139,7 +144,7 @@ const App = () => {
                     onClick={() => setIsListExpanded(!isListExpanded)}
                   >
                     <h3 className="text-white/60 text-[11px] font-black uppercase tracking-[0.3em]">
-                      Lista de Aplicaciones
+                      List of apps
                     </h3>
                     {isListExpanded ? (
                       <ChevronUp size={14} />
@@ -177,7 +182,7 @@ const App = () => {
                           <Plus className="opacity-40 group-hover:opacity-100" />
                         </div>
                         <span className="text-[11px] font-bold text-white/40 uppercase">
-                          Crear Lista
+                          Create list
                         </span>
                       </div>
                     </div>
@@ -186,7 +191,7 @@ const App = () => {
 
                 <section>
                   <h3 className="text-white/60 text-[11px] font-black uppercase tracking-[0.3em] mb-6 ml-4">
-                    Todas las Aplicaciones
+                    All
                   </h3>
                   <div className="flex flex-wrap gap-6">
                     {filteredItems.map(it => (
@@ -275,6 +280,12 @@ const App = () => {
           setAppLists(n);
           save(items, n);
         }}
+      />
+      <AppNameModal
+        isOpen={nameModal.isOpen}
+        initialValue={nameModal.defaultName}
+        onClose={() => setNameModal({ ...nameModal, isOpen: false })}
+        onSave={handleConfirmNewApp}
       />
     </div>
   );
