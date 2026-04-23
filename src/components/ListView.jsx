@@ -15,9 +15,7 @@ const ListView = ({
 
   if (!list)
     return (
-      <h2 className="text-white text-center mt-10 font-bold">
-        No se encontró la lista
-      </h2>
+      <h2 className="text-white text-center mt-10 font-bold">List not found</h2>
     );
 
   const listItems = list.appIds
@@ -44,7 +42,7 @@ const ListView = ({
           size={20}
           className="group-hover:-translate-x-1 transition-transform"
         />
-        <span className="text-xs font-bold uppercase tracking-widest">
+        <span className="text-xs font-bold uppercase tracking-widest cursor-pointer">
           Go back
         </span>
       </button>
@@ -68,24 +66,21 @@ const ListView = ({
         </div>
 
         <div className="flex flex-col z-10 flex-1 text-center md:text-left w-full pt-2">
-          {/* Título */}
           <h1 className="text-4xl md:text-5xl font-black text-white leading-tight mb-2">
             {list.name}
           </h1>
 
-          {/* Descripción */}
           <p className="text-white/60 text-sm max-w-xl mx-auto md:mx-0 font-medium mb-6">
             {list.description || "No description"}
           </p>
 
-          {/* Contenedor de Botones - Ahora forzamos columna siempre o flex-start */}
           <div className="z-10 flex flex-col sm:flex-row gap-3 w-full md:w-max">
             <button
               onClick={() => onEdit(list)}
               className="flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white px-6 py-3 rounded-full font-bold transition-all shadow-lg border border-white/10"
             >
               <Pencil size={18} />
-              <span className="text-sm">Edit</span>
+              <span className="text-sm cursor-pointer">Edit</span>
             </button>
 
             <button
@@ -94,19 +89,17 @@ const ListView = ({
               className="flex items-center justify-center gap-2 bg-orange-600 hover:bg-orange-500 disabled:bg-gray-700 disabled:text-gray-500 text-white px-8 py-3 rounded-full font-bold transition-all shadow-lg hover:shadow-orange-500/25 active:scale-95 border border-white/10"
             >
               <Play size={18} fill="currentColor" />
-              <span className="text-sm">Run all</span>
+              <span className="text-sm cursor-pointer">Run all</span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* Barra de búsqueda interna ajustada */}
       <div className="w-full mb-10 group">
         {" "}
-        {/* Eliminado max-w-md para que ocupe el width del contenedor */}
         <div className="relative flex items-center">
           <Search
-            className="absolute left-5 text-white/50 group-focus-within:text-orange-500 transition-colors"
+            className="absolute left-5 text-white/50 group-focus-within:text-orange-500 transition-colors z-10"
             size={18}
           />
           <input
@@ -119,7 +112,6 @@ const ListView = ({
         </div>
       </div>
 
-      {/* Grilla de Apps filtrada */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 justify-items-center">
         {filteredListItems.length > 0 ? (
           filteredListItems.map(item => (
@@ -135,7 +127,7 @@ const ListView = ({
         ) : (
           <div className="col-span-full py-10 opacity-30 flex flex-col items-center">
             <Folder size={48} className="mb-2" />
-            <p className="text-sm italic">No se encontraron aplicaciones</p>
+            <p className="text-sm italic">Apps not found</p>
           </div>
         )}
       </div>

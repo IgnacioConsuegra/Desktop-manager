@@ -4,12 +4,18 @@ const fs = require("fs");
 
 const dataPath = path.join(app.getPath("userData"), "desktop-data.json");
 
-function createWindow() {
+const createWindow = () => {
   const win = new BrowserWindow({
-    width: 1100,
+    width: 1200,
     height: 800,
-    title: "Desktop Manager",
-    icon: path.join(__dirname, "../public/icon.png"),
+    icon: path.join(__dirname, "icon.png"),
+    // autoHideMenuBar: true,
+    titleBarStyle: "hidden",
+    titleBarOverlay: {
+      color: "#000000",
+      symbolColor: "#ffffff",
+      height: 32,
+    },
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
@@ -17,28 +23,33 @@ function createWindow() {
     },
   });
 
-  if (process.argv.includes("--dev")) {
-    win.loadURL("http://localhost:5173");
-  } else {
-    win.loadFile(path.join(__dirname, "../dist/index.html"));
-  }
-}
+  win.setMenu(null);
 
-// En electron/main.js
+  win.webContents.on("before-input-event", (event, input) => {
+    if (input.key === "F11" && input.type === "keyDown") {
+      const isFullScreen = win.isFullScreen();
+      win.setFullScreen(!isFullScreen);
+    }
+  });
+
+  if (app.isPackaged) {
+    win.loadFile(path.join(__dirname, "../dist/index.html"));
+  } else {
+    win.loadURL("http://localhost:5173");
+  }
+};
+
 ipcMain.handle("process-file-path", async (event, filePath) => {
   try {
     let targetPath = filePath;
 
-    // Si es un acceso directo de Windows, intentamos ver a dónde apunta
     if (filePath.toLowerCase().endsWith(".lnk")) {
       try {
         const shortcut = shell.readShortcutLink(filePath);
         if (shortcut.target) {
-          targetPath = shortcut.target; // Ahora tenemos la ruta al .exe real
+          targetPath = shortcut.target;
         }
-      } catch (e) {
-        // Si falla al leer el link (por permisos), seguimos con la ruta original
-      }
+      } catch (e) {}
     }
 
     const fileName = path.basename(filePath, path.extname(filePath));
@@ -81,14 +92,13 @@ ipcMain.on("open-path", (event, targetPath) => {
 
 ipcMain.handle("select-file", async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog({
-    title: "Seleccionar Aplicación o Archivo",
-    buttonLabel: "Agregar a mi App",
-    // Quitamos 'openDirectory' temporalmente para forzar a Windows a mostrar archivos
+    title: "Select file or app",
+    buttonLabel: "Add to app",
     properties: ["openFile", "dontAddToRecent"],
     filters: [
-      { name: "Todos los archivos", extensions: ["*"] },
+      { name: "All files", extensions: ["*"] },
       {
-        name: "Aplicaciones",
+        name: "Apps",
         extensions: ["exe", "lnk", "app", "mp3", "mp4", "jpg", "png", "url"],
       },
     ],

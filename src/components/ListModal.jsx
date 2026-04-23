@@ -112,7 +112,7 @@ const ListModal = ({ isOpen, onClose, onSave, allItems, initialData }) => {
                     e.stopPropagation();
                     setCustomImage(null);
                   }}
-                  className="text-[10px] text-red-500 hover:text-red-400 font-bold uppercase tracking-widest transition-colors mt-1"
+                  className="text-[10px] text-red-500 hover:text-red-400 font-bold uppercase tracking-widest transition-colors mt-1 cursor-pointer"
                 >
                   Remove Cover
                 </button>
@@ -166,7 +166,7 @@ const ListModal = ({ isOpen, onClose, onSave, allItems, initialData }) => {
           <button
             onClick={handleSave}
             disabled={!name.trim()}
-            className="bg-orange-600 hover:bg-orange-500 disabled:bg-gray-700 disabled:text-gray-500 text-white px-10 py-3.5 rounded-full font-bold transition-all shadow-lg hover:shadow-orange-500/25 active:scale-95 border border-white/10"
+            className="bg-orange-600 hover:bg-orange-500 cursor-pointer disabled:bg-gray-700 disabled:text-gray-500 text-white px-10 py-3.5 rounded-full font-bold transition-all shadow-lg hover:shadow-orange-500/25 active:scale-95 border border-white/10"
           >
             Save
           </button>

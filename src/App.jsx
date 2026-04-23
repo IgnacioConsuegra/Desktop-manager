@@ -95,11 +95,18 @@ const App = () => {
             {currentView.type === "home" ? (
               <div className="w-full max-w-6xl">
                 <div className="relative max-w-2xl mx-auto mb-16 group">
-                  <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-white transition-colors" />
+                  <div className="absolute left-6 top-1/2 -translate-y-1/2 z-10 pointer-events-none">
+                    <Search
+                      className="text-white/50 group-focus-within:text-orange-500 transition-colors"
+                      size={20}
+                      strokeWidth={2.5}
+                    />
+                  </div>
+
                   <input
                     type="text"
                     placeholder="Write for search..."
-                    className="w-full bg-black/40 rounded-full py-4 pl-16 pr-8 border border-white/10 outline-none focus:border-white/30 backdrop-blur-xl text-lg"
+                    className="w-full bg-black/40 rounded-full py-4 pl-16 pr-8 border border-white/10 outline-none focus:border-white/30 backdrop-blur-xl text-lg text-white relative z-0"
                     value={searchQuery}
                     onChange={e => setSearchQuery(e.target.value)}
                   />

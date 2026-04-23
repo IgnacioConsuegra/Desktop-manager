@@ -21,7 +21,7 @@ const AppNameModal = ({ isOpen, onClose, onSave, initialValue }) => {
           </h2>
           <button
             onClick={onClose}
-            className="text-white/40 hover:text-white transition-colors"
+            className="text-white/40 hover:text-white transition-colors cursor-pointer"
           >
             <X size={20} />
           </button>
@@ -47,14 +47,14 @@ const AppNameModal = ({ isOpen, onClose, onSave, initialValue }) => {
         <div className="p-6 border-t border-white/5 flex gap-3 justify-end">
           <button
             onClick={onClose}
-            className="px-6 py-2 rounded-full text-sm font-bold text-white/60 hover:text-white transition-colors"
+            className="px-6 py-2 rounded-full text-sm font-bold text-white/60 hover:text-white transition-colors cursor-pointer"
           >
             Cancel
           </button>
           <button
             disabled={!name.trim()}
             onClick={() => onSave(name)}
-            className="bg-orange-600 hover:bg-orange-500 disabled:bg-gray-800 disabled:text-gray-600 text-white px-8 py-2 rounded-full font-bold transition-all shadow-lg border border-white/10 active:scale-95"
+            className="bg-orange-600 cursor-pointer hover:bg-orange-500 disabled:bg-gray-800 disabled:text-gray-600 text-white px-8 py-2 rounded-full font-bold transition-all shadow-lg border border-white/10 active:scale-95"
           >
             Confirm
           </button>
