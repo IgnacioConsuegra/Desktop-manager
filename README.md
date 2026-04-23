@@ -30,30 +30,34 @@ Ensure you have Node.js and npm installed on your system.
 
 ```bash
 git clone [https://github.com/yourusername/desktop-manager.git](https://github.com/yourusername/desktop-manager.git)
-cd desktop-manager
+
 ```
 
 ### Install dependencies:
 
-Bash
+```bash
+cd desktop-manager
 npm install
-Development
+```
+
+### Development
 To run the application in development mode with hot-reloading:
 
-Bash
+```bash
 npm run electron:dev
+```
 This command starts the Vite development server and launches the Electron application simultaneously.
 
 ### Building for Production
 
 To compile the application and create a standalone Windows executable (.exe):
-
-Bash
+```bash
 npm run electron:build
+```
+Then go to the ./release folder and execute the .exe there. 
 
 The compiled installer and unpacked application files will be generated in the release directory. Note: Administrative privileges may be required to run the build script depending on your local system restrictions.
 
-Then go to the release folder and execute the .exe
 
 ### Project Structure
 
