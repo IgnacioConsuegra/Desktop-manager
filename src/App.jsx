@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Search, ChevronDown, ChevronUp, Plus } from "lucide-react";
-import Swal from "sweetalert2";
 
 import AppIcon from "./components/AppIcon";
 import AppListIcon from "./components/AppListIcon";
